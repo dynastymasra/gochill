@@ -22,6 +22,7 @@ test: unit-test
 
 unit-test: test_version.txt
 		$(MAKE) -e VERSION=$$(cat test_version.txt) build
+		go get -u github.com/jstemmer/go-junit-report
 		go get github.com/axw/gocov/gocov
 		go get github.com/AlekSi/gocov-xml
 		./test-unit.sh
