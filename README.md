@@ -59,8 +59,14 @@ Available levels :
 
 # Unit Test
 
-How to run
+How to run :
 
 ```
 go test -cover
+```
+
+Via `Makefile` :
+
+```
+make test
 ```
