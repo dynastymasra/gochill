@@ -49,19 +49,7 @@ func (m *Message) ReplaceJSONEngine(je JSONMarshalEngine) {
 //ReplaceOSEngine used to change native golang os hostname implementation
 func (m *Message) ReplaceOSEngine(oe OSHostEngine) {
 	m.osEngine = oe
-	m.parseHostName()
-}
-
-//parseHostName used to parse os hostname, but to simplify our library
-//i just create this function, so we doesn't need to care about multiple
-//return value for caller, is something goes wrong just return an empty string
-func (m *Message) parseHostName() {
-	host, err := m.osEngine()
-	if err != nil {
-		m.Host = ""
-	}
-
-	m.Host = host
+	m.Host = _parseHostName(m.osEngine)
 }
 
 //NewMessage used to create new instance of `message` struct
@@ -73,6 +61,18 @@ func NewMessage(level int) *Message {
 	m.Level = level
 	m.jsonEngine = json.Marshal
 	m.osEngine = os.Hostname
-	m.parseHostName()
+	m.Host = _parseHostName(m.osEngine)
 	return &m
+}
+
+//parseHostName used to parse os hostname, but to simplify our library
+//i just create this function, so we doesn't need to care about multiple
+//return value for caller, is something goes wrong just return an empty string
+func _parseHostName(os OSHostEngine) string {
+	host, err := os()
+	if err != nil {
+		return ""
+	}
+
+	return host
 }
