@@ -1,5 +1,5 @@
 FROM golang:1.7.0-alpine
-MAINTAINER kuncara "hiraq@onebitmedia.com"
+MAINTAINER hiraq "hiraq@onebitmedia.com"
 
 RUN apk add -U git bash && rm -rf /var/cache/apk/*
 
