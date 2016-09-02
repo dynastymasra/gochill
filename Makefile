@@ -2,12 +2,12 @@ SHELL := bash
 
 VERSION ?= latest
 TEST_PREFIX ?= test-
-PROJECT_NAME = gochill
+IMAGE = gochill
 
 .PHONY: build
 
 build:
-	echo "building..."
+	docker build -t "$(IMAGE):$(VERSION)" .
 
 test_version.txt:
 	# put version tag for test image into a test_version.txt
@@ -22,10 +22,9 @@ test: unit-test
 
 unit-test: test_version.txt
 		$(MAKE) -e VERSION=$$(cat test_version.txt) build
-		go get -u github.com/jstemmer/go-junit-report
-		go get github.com/axw/gocov/gocov
-		go get github.com/AlekSi/gocov-xml
-		./test-unit.sh
+		mkdir -p test-results
+		docker run --rm -v $$(pwd)/test-results:/go/src/gochill/test-results \
+			$(IMAGE):$$(cat test_version.txt) unit
 
 clean-txt:
 		rm *.txt
@@ -35,3 +34,6 @@ clean-out:
 
 clean-xml:
 		rm *.xml
+
+clean-results:
+		rm -rf test-results

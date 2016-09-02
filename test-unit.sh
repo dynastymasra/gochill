@@ -1,5 +1,7 @@
 #!/bin/bash
 
-go test -v -cover -covermode count -coverprofile=cover.out | $GOPATH/bin/go-junit-report > results.xml 
-$GOPATH/bin/gocov convert cover.out | $GOPATH/bin/gocov-xml > coverage.xml
-# $GOPATH/bin/go2xunit -fail -input cover.out -output results.xml
+go test -v -cover -covermode count -coverprofile=/go/src/gochill/test-results/cover.out | $GOPATH/bin/go-junit-report > test-results/results.xml
+$GOPATH/bin/gocov convert /go/src/gochill/test-results/cover.out | $GOPATH/bin/gocov-xml > test-results/coverage.xml
+echo "Inside container : $(pwd)"
+echo "Test results : ..."
+ls -l test-results

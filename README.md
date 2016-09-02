@@ -26,7 +26,7 @@ this library not do anything that print the message to `stdout`.
 This library will listen to environment variable with registered key `SERVICE_NAME`.
 This variable used to fill `service` json field.
 
-If environment variable not exists, then `service` will an empty string.
+If environment variable not exists, then `service` will be an empty string.
 
 # Hostname
 
