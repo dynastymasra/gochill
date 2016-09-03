@@ -21,7 +21,7 @@ func NewCustomeLogger(std, custom io.Writer) *log.Logger {
 //Alert used to create log message with alert level
 func Alert(msg string) {
 	message := buildMessage(LevelAlert, msg)
-	Logger = NewCustomeLogger(os.Stdout, CustomOutput)
+	Logger = NewCustomeLogger(os.Stderr, CustomOutput)
 	Logger.Println(string(message))
 }
 
