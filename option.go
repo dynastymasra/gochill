@@ -2,33 +2,42 @@ package gochill
 
 //Option struct used to set optional field to the log
 type Option struct {
-	Key    string
-	Value  interface{}
-	output map[string]interface{}
+	Key   string
+	Value interface{}
 }
 
 //Set used to set new key value
 func (o *Option) Set(key string, value interface{}) {
 	o.Key = "_" + key
 	o.Value = value
-
-	o._makeMap()
-}
-
-//Out used to get output data that should contains
-//mapping Key and Value
-func (o *Option) Out() map[string]interface{} {
-	return o.output
-}
-
-//_makeMap is private function used to make mapping key value
-func (o *Option) _makeMap() {
-	o.output = make(map[string]interface{})
-	o.output[o.Key] = o.Value
 }
 
 //NewOption used to create new Option instance
 func NewOption() *Option {
 	o := Option{}
 	return &o
+}
+
+//MergeOptionsToMap used to merge given options with Option type
+//merge them into one map string interface
+func MergeOptionsToMap(options []Option) map[string]interface{} {
+	var maps map[string]interface{}
+	maps = make(map[string]interface{})
+
+	//only continue process if list is not empty
+	if len(options) > 0 {
+		for _, option := range options {
+			maps[option.Key] = option.Value
+		}
+	}
+
+	return maps
+}
+
+//O used to set optional fields
+func O(key string, value interface{}) Option {
+	o := NewOption()
+	o.Set(key, value)
+
+	return *o
 }

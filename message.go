@@ -13,7 +13,6 @@ do this to initiate host, service and timestamp value.
 */
 
 import (
-	"encoding/json"
 	"os"
 	"time"
 )
@@ -26,24 +25,22 @@ type Message struct {
 	ShortMessage string `json:"short_message"`
 	Timestamp    int64  `json:"timestamp"`
 	Level        int    `json:"level"`
-	jsonEngine   JSONMarshalEngine
 	osEngine     OSHostEngine
 }
 
-//ToJSON used to convert Message struct from byte to string after marshalled by
-//json encoding
-func (m *Message) ToJSON() []byte {
-	jsonByte, err := m.jsonEngine(m)
-	if err != nil {
-		return nil
-	}
+//ToMap used to convert all exported fields into map string interface
+func (m *Message) ToMap() map[string]interface{} {
+	var maps map[string]interface{}
+	maps = make(map[string]interface{})
 
-	return jsonByte
-}
+	maps["version"] = m.Version
+	maps["host"] = m.Host
+	maps["service"] = m.Service
+	maps["short_message"] = m.ShortMessage
+	maps["timestamp"] = m.Timestamp
+	maps["level"] = m.Level
 
-//ReplaceJSONEngine used to change json engine
-func (m *Message) ReplaceJSONEngine(je JSONMarshalEngine) {
-	m.jsonEngine = je
+	return maps
 }
 
 //ReplaceOSEngine used to change native golang os hostname implementation
@@ -59,7 +56,6 @@ func NewMessage(level int) *Message {
 	m.Service = os.Getenv(EnvServiceKeyName)
 	m.Timestamp = time.Now().UnixNano() / int64(time.Millisecond)
 	m.Level = level
-	m.jsonEngine = json.Marshal
 	m.osEngine = os.Hostname
 	m.Host = _parseHostName(m.osEngine)
 	return &m

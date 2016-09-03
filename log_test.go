@@ -3,6 +3,8 @@ package gochill
 import (
 	"encoding/json"
 	"testing"
+
+	simplejson "github.com/bitly/go-simplejson"
 )
 
 var message []byte
@@ -31,6 +33,40 @@ func TestAlert(t *testing.T) {
 		t.Log("Expected result : ", "ini log")
 		t.Log("Given result : ", logM.ShortMessage)
 	}
+}
+
+func TestAlertWithOptional(t *testing.T) {
+
+	CustomOutput = CustomLogger{}
+	Alert("ini log", O("key1", "value1"), O("key2", 10))
+
+	j, _ := simplejson.NewJson(message)
+	maps := j.MustMap()
+
+	if maps["_key1"] == nil {
+		t.Fail()
+		t.Log("Expected result is _key1 exists")
+		t.Log("Given result : ", maps["_key1"])
+	}
+
+	if maps["_key2"] == nil {
+		t.Fail()
+		t.Log("Expected result is _key2 exists")
+		t.Log("Given result : ", maps["_key2"])
+	}
+
+	if maps["version"] == nil {
+		t.Fail()
+		t.Log("Expected result is version exists")
+		t.Log("Given result : ", maps["version"])
+	}
+
+	if maps["short_message"] == nil {
+		t.Fail()
+		t.Log("Expected result is short_message exists")
+		t.Log("Given result : ", maps["short_message"])
+	}
+
 }
 
 //TestAlertWithoutCustomWriter used to make sure that
