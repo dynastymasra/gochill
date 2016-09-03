@@ -43,8 +43,7 @@ But if there is some error, then `hostname` will be an empty string.
 ```go
 import "gochill"
 
-log.Println(gochill.Alert("alert message"))
-log.Println(gochill.Info("alert message"))
+gochill.Alert("alert message")
 ```
 
 Available levels :
@@ -56,6 +55,26 @@ Available levels :
 - Notice
 - Info
 - Debug
+
+Gochill designed with `io.MultiWriter` it means you can add your own custom
+`io.Writer` to proceed your log.
+
+```go
+package main
+
+import "gochill"
+
+type CustomWriter struct{}
+func (cw CustomWriter) Write(message []byte) (int, error) {
+  fmt.Println("hello world")
+}
+
+gochill.CustomOutput = CustomWriter{}
+gochill.Info("log info")
+```
+
+These code should produce an output will send a structured json code and also
+  print "hello world" to stdout.
 
 # Unit Test
 
