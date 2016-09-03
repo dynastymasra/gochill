@@ -5,28 +5,48 @@ import (
 	"testing"
 )
 
+var message []byte
+
+type CustomLogger struct{}
+
+func (cl CustomLogger) Write(p []byte) (int, error) {
+	message = p
+	return 0, nil
+}
+
 func TestAlert(t *testing.T) {
-	log := Alert("ini log")
+
+	CustomOutput = CustomLogger{}
+	Alert("ini log")
 
 	logM := Message{}
-	err := json.Unmarshal(log, &logM)
+	err := json.Unmarshal(message, &logM)
 
 	if err != nil {
 		t.Error(err)
 	}
 
-	if logM.Level != LevelAlert {
+	if logM.ShortMessage != "ini log" {
 		t.Fail()
-		t.Log("Expected Level : ", LevelAlert)
-		t.Log("Given Level : ", logM.Level)
+		t.Log("Expected result : ", "ini log")
+		t.Log("Given result : ", logM.ShortMessage)
 	}
 }
 
+//TestAlertWithoutCustomWriter used to make sure that
+//logging still working even without custom io writer implemented
+func TestAlertWithoutCustomWriter(t *testing.T) {
+	Alert("ini log")
+	t.Log("logged")
+}
+
 func TestInfo(t *testing.T) {
-	log := Info("ini log")
+
+	CustomOutput = CustomLogger{}
+	Info("ini log")
 
 	logM := Message{}
-	err := json.Unmarshal(log, &logM)
+	err := json.Unmarshal(message, &logM)
 
 	if err != nil {
 		t.Error(err)
@@ -40,10 +60,11 @@ func TestInfo(t *testing.T) {
 }
 
 func TestCritical(t *testing.T) {
-	log := Critical("ini log")
+	CustomOutput = CustomLogger{}
+	Critical("ini log")
 
 	logM := Message{}
-	err := json.Unmarshal(log, &logM)
+	err := json.Unmarshal(message, &logM)
 
 	if err != nil {
 		t.Error(err)
@@ -57,10 +78,11 @@ func TestCritical(t *testing.T) {
 }
 
 func TestError(t *testing.T) {
-	log := Error("ini log")
+	CustomOutput = CustomLogger{}
+	Error("ini log")
 
 	logM := Message{}
-	err := json.Unmarshal(log, &logM)
+	err := json.Unmarshal(message, &logM)
 
 	if err != nil {
 		t.Error(err)
@@ -74,10 +96,11 @@ func TestError(t *testing.T) {
 }
 
 func TestWarn(t *testing.T) {
-	log := Warn("ini log")
+	CustomOutput = CustomLogger{}
+	Warn("ini log")
 
 	logM := Message{}
-	err := json.Unmarshal(log, &logM)
+	err := json.Unmarshal(message, &logM)
 
 	if err != nil {
 		t.Error(err)
@@ -91,10 +114,11 @@ func TestWarn(t *testing.T) {
 }
 
 func TestNotice(t *testing.T) {
-	log := Notice("ini log")
+	CustomOutput = CustomLogger{}
+	Notice("ini log")
 
 	logM := Message{}
-	err := json.Unmarshal(log, &logM)
+	err := json.Unmarshal(message, &logM)
 
 	if err != nil {
 		t.Error(err)
@@ -108,10 +132,11 @@ func TestNotice(t *testing.T) {
 }
 
 func TestDebug(t *testing.T) {
-	log := Debug("ini log")
+	CustomOutput = CustomLogger{}
+	Debug("ini log")
 
 	logM := Message{}
-	err := json.Unmarshal(log, &logM)
+	err := json.Unmarshal(message, &logM)
 
 	if err != nil {
 		t.Error(err)
