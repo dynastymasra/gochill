@@ -74,7 +74,23 @@ gochill.Info("log info")
 ```
 
 These code should produce an output will send a structured json code and also
-  print "hello world" to stdout.
+print "hello world" to stdout.
+
+Each of log function also support for optional fields, usages :
+
+```go
+package main
+
+import "gochill"
+
+gochill.Alert("log alert", O("key1", "value1"), O("key2", 230))
+```
+
+It will produce result like this :
+
+```
+{"_key1":"value1","_key2":230,"host":"your.hostname","level":1,"service":"","short_message":"log alert","timestamp":1472879389234,"version":1}
+```
 
 # Unit Test
 
