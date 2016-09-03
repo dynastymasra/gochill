@@ -18,8 +18,8 @@ to use for other programmers.
 
 # Rationale
 
-This library should be only for building logging data structure, it means for now,
-this library not do anything that print the message to `stdout`.
+This library should be only for building logging data structure and print it using
+stdout or stderr.
 
 # Environment Variable
 
