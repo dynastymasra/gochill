@@ -21,12 +21,6 @@ func NewCustomOutput(output io.Writer) {
 	Logger.SetOutput(output)
 }
 
-//NewCustomeLogger used to set custom log output destination
-func NewCustomeLogger(std, custom io.Writer) *log.Logger {
-	logger := log.New(io.MultiWriter(std, custom), "", 0)
-	return logger
-}
-
 //Alert used to create log message with alert level
 func Alert(msg string, options ...Option) {
 	message := buildMessage(LevelAlert, msg, options)
