@@ -43,7 +43,7 @@ But if there is some error, then `hostname` will be an empty string.
 ```go
 import "gochill"
 
-gochill.Alert("alert message")
+gochill.Alert(Msg("alert message"))
 ```
 
 Available levels :
@@ -70,7 +70,7 @@ func (cw CustomWriter) Write(message []byte) (int, error) {
 }
 
 gochill.CustomOutput = CustomWriter{}
-gochill.Info("log info")
+gochill.Info(Msg("log info"))
 ```
 
 These code should produce an output will send a structured json code and also
@@ -83,13 +83,23 @@ package main
 
 import "gochill"
 
-gochill.Alert("log alert", O("key1", "value1"), O("key2", 230))
+gochill.Alert(Msg("log alert"), O("key1", "value1"), O("key2", 230))
 ```
 
 It will produce result like this :
 
 ```
 {"_key1":"value1","_key2":230,"host":"your.hostname","level":1,"service":"","short_message":"log alert","timestamp":1472879389234,"version":1}
+```
+
+If you need a `full_message` to describe your log, you can filled optional full message like this :
+
+```go
+package main
+
+import "gochill"
+
+gochill.Alert(Msg("short message", "full_message"))
 ```
 
 # Unit Test
