@@ -23,55 +23,55 @@ func NewCustomOutput(output io.Writer) {
 
 //Alert used to create log message with alert level
 func Alert(msg string, options ...Option) {
-	message := _buildMessage(LevelAlert, msg, options)
+	message := buildMessage(LevelAlert, msg, options)
 	NewCustomOutput(io.MultiWriter(os.Stderr, CustomOutput))
 	Logger.Println(string(message))
 }
 
 //Info used to create log message with info level
 func Info(msg string, options ...Option) {
-	message := _buildMessage(LevelInfo, msg, options)
+	message := buildMessage(LevelInfo, msg, options)
 	NewCustomOutput(io.MultiWriter(os.Stdout, CustomOutput))
 	Logger.Println(string(message))
 }
 
 //Critical used to create log message with critical level
 func Critical(msg string, options ...Option) {
-	message := _buildMessage(LevelCritical, msg, options)
+	message := buildMessage(LevelCritical, msg, options)
 	NewCustomOutput(io.MultiWriter(os.Stderr, CustomOutput))
 	Logger.Println(string(message))
 }
 
 //Error used to create log message with error level
 func Error(msg string, options ...Option) {
-	message := _buildMessage(LevelError, msg, options)
+	message := buildMessage(LevelError, msg, options)
 	NewCustomOutput(io.MultiWriter(os.Stderr, CustomOutput))
 	Logger.Println(string(message))
 }
 
 //Warn used to create log message with warning level
 func Warn(msg string, options ...Option) {
-	message := _buildMessage(LevelWarning, msg, options)
+	message := buildMessage(LevelWarning, msg, options)
 	NewCustomOutput(io.MultiWriter(os.Stdout, CustomOutput))
 	Logger.Println(string(message))
 }
 
 //Notice used to create log message with warning level
 func Notice(msg string, options ...Option) {
-	message := _buildMessage(LevelNotice, msg, options)
+	message := buildMessage(LevelNotice, msg, options)
 	NewCustomOutput(io.MultiWriter(os.Stdout, CustomOutput))
 	Logger.Println(string(message))
 }
 
 //Debug used to create log message with warning level
 func Debug(msg string, options ...Option) {
-	message := _buildMessage(LevelDebug, msg, options)
+	message := buildMessage(LevelDebug, msg, options)
 	NewCustomOutput(io.MultiWriter(os.Stdout, CustomOutput))
 	Logger.Println(string(message))
 }
 
-//_buildMessage is a private function used to build message structure
-func _buildMessage(level int, msg string, options []Option) []byte {
+//buildMessage is a private function used to build message structure
+func buildMessage(level int, msg string, options []Option) []byte {
 	m := NewMessage(level)
 	m.ShortMessage = msg
 

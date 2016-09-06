@@ -23,6 +23,7 @@ type Message struct {
 	Host         string `json:"host"`
 	Service      string `json:"service"`
 	ShortMessage string `json:"short_message"`
+	FullMessage  string `json:"full_message,omitempty"`
 	Timestamp    int64  `json:"timestamp"`
 	Level        int    `json:"level"`
 	osEngine     OSHostEngine
@@ -39,6 +40,7 @@ func (m *Message) ToMap() map[string]interface{} {
 	maps["short_message"] = m.ShortMessage
 	maps["timestamp"] = m.Timestamp
 	maps["level"] = m.Level
+	maps["full_message"] = m.FullMessage
 
 	return maps
 }
@@ -46,7 +48,7 @@ func (m *Message) ToMap() map[string]interface{} {
 //ReplaceOSEngine used to change native golang os hostname implementation
 func (m *Message) ReplaceOSEngine(oe OSHostEngine) {
 	m.osEngine = oe
-	m.Host = _parseHostName(m.osEngine)
+	m.Host = parseHostname(m.osEngine)
 }
 
 //NewMessage used to create new instance of `message` struct
@@ -57,14 +59,28 @@ func NewMessage(level int) *Message {
 	m.Timestamp = time.Now().UnixNano() / int64(time.Millisecond)
 	m.Level = level
 	m.osEngine = os.Hostname
-	m.Host = _parseHostName(m.osEngine)
+	m.Host = parseHostname(m.osEngine)
 	return &m
+}
+
+//Msg used to give message contains with short and (optional) full message
+func Msg(short string, full ...string) (shortmsg, fullmsg string) {
+
+	fullmsg = "" //set default value to empty string
+	shortmsg = short
+
+	//only replace the value if full variable filled
+	if len(full) > 0 {
+		fullmsg = full[0]
+	}
+
+	return
 }
 
 //parseHostName used to parse os hostname, but to simplify our library
 //i just create this function, so we doesn't need to care about multiple
 //return value for caller, is something goes wrong just return an empty string
-func _parseHostName(os OSHostEngine) string {
+func parseHostname(os OSHostEngine) string {
 	host, err := os()
 	if err != nil {
 		return ""
