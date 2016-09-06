@@ -19,7 +19,7 @@ func (cl CustomLogger) Write(p []byte) (int, error) {
 func TestAlert(t *testing.T) {
 
 	CustomOutput = CustomLogger{}
-	Alert("ini log")
+	Alert(Msg("ini log"))
 
 	logM := Message{}
 	err := json.Unmarshal(message, &logM)
@@ -38,7 +38,7 @@ func TestAlert(t *testing.T) {
 func TestAlertWithOptional(t *testing.T) {
 
 	CustomOutput = CustomLogger{}
-	Alert("ini log", O("key1", "value1"), O("key2", 10))
+	Alert(Msg("ini log"), O("key1", "value1"), O("key2", 10))
 
 	j, _ := simplejson.NewJson(message)
 	maps := j.MustMap()
@@ -72,14 +72,14 @@ func TestAlertWithOptional(t *testing.T) {
 //TestAlertWithoutCustomWriter used to make sure that
 //logging still working even without custom io writer implemented
 func TestAlertWithoutCustomWriter(t *testing.T) {
-	Alert("ini log")
+	Alert(Msg("ini log"))
 	t.Log("logged")
 }
 
 func TestInfo(t *testing.T) {
 
 	CustomOutput = CustomLogger{}
-	Info("ini log")
+	Info(Msg("ini log"))
 
 	logM := Message{}
 	err := json.Unmarshal(message, &logM)
@@ -97,7 +97,7 @@ func TestInfo(t *testing.T) {
 
 func TestCritical(t *testing.T) {
 	CustomOutput = CustomLogger{}
-	Critical("ini log")
+	Critical(Msg("ini log"))
 
 	logM := Message{}
 	err := json.Unmarshal(message, &logM)
@@ -115,7 +115,7 @@ func TestCritical(t *testing.T) {
 
 func TestError(t *testing.T) {
 	CustomOutput = CustomLogger{}
-	Error("ini log")
+	Error(Msg("ini log"))
 
 	logM := Message{}
 	err := json.Unmarshal(message, &logM)
@@ -133,7 +133,7 @@ func TestError(t *testing.T) {
 
 func TestWarn(t *testing.T) {
 	CustomOutput = CustomLogger{}
-	Warn("ini log")
+	Warn(Msg("ini log"))
 
 	logM := Message{}
 	err := json.Unmarshal(message, &logM)
@@ -151,7 +151,7 @@ func TestWarn(t *testing.T) {
 
 func TestNotice(t *testing.T) {
 	CustomOutput = CustomLogger{}
-	Notice("ini log")
+	Notice(Msg("ini log"))
 
 	logM := Message{}
 	err := json.Unmarshal(message, &logM)
@@ -169,7 +169,7 @@ func TestNotice(t *testing.T) {
 
 func TestDebug(t *testing.T) {
 	CustomOutput = CustomLogger{}
-	Debug("ini log")
+	Debug(Msg("ini log"))
 
 	logM := Message{}
 	err := json.Unmarshal(message, &logM)

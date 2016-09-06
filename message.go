@@ -17,6 +17,12 @@ import (
 	"time"
 )
 
+//MessageLog used to set short and full message
+type MessageLog struct {
+	Short string
+	Full  string
+}
+
 //Message struct used to build all required fields
 type Message struct {
 	Version      int    `json:"version"`
@@ -64,17 +70,17 @@ func NewMessage(level int) *Message {
 }
 
 //Msg used to give message contains with short and (optional) full message
-func Msg(short string, full ...string) (shortmsg, fullmsg string) {
+func Msg(short string, full ...string) MessageLog {
 
-	fullmsg = "" //set default value to empty string
-	shortmsg = short
+	message := MessageLog{}
+	message.Short = short
 
 	//only replace the value if full variable filled
 	if len(full) > 0 {
-		fullmsg = full[0]
+		message.Full = full[0]
 	}
 
-	return
+	return message
 }
 
 //parseHostName used to parse os hostname, but to simplify our library
