@@ -1,11 +1,43 @@
 package gochill
 
 import (
-	"encoding/json"
 	"errors"
 	"os"
 	"testing"
 )
+
+func TestMsgEmptyFullMsg(t *testing.T) {
+	message := Msg("test")
+
+	if message.Short != "test" {
+		t.Fail()
+		t.Log("Expected result short variable is equal with test")
+		t.Log("Given result : ", message.Short)
+	}
+
+	if message.Full != "" {
+		t.Fail()
+		t.Log("Expected result full variable is empty string")
+		t.Log("Given result : ", message.Full)
+	}
+}
+
+func TestMsgFullMsgNotEmpty(t *testing.T) {
+	message := Msg("test short", "test full")
+
+	if message.Short != "test short" {
+		t.Fail()
+		t.Log("Expected result short variable is equal with test sort")
+		t.Log("Given result : ", message.Short)
+	}
+
+	if message.Full != "test full" {
+		t.Fail()
+		t.Log("Expected result full variable is equal with test full")
+		t.Log("Given result : ", message.Full)
+	}
+
+}
 
 func TestNewMessage(t *testing.T) {
 	os.Setenv(EnvServiceKeyName, "testing_gochill_service")
@@ -24,55 +56,6 @@ func TestNewMessage(t *testing.T) {
 	if m.Service != os.Getenv(EnvServiceKeyName) {
 		t.Fail()
 		t.Log("Unexpected Service Name : ", m.Service)
-	}
-}
-
-func TestMessageToJSON(t *testing.T) {
-	m := NewMessage(LevelAlert)
-	m.ShortMessage = "halo"
-
-	toJSON := m.ToJSON()
-	toString := string(toJSON)
-
-	if toString == "" {
-		t.Fail()
-		t.Log("Unexpected string json : ", toString)
-	}
-
-	newm := Message{}
-	err := json.Unmarshal([]byte(toString), &newm)
-	if err != nil {
-		t.Error(err)
-	}
-
-	if m.ShortMessage != newm.ShortMessage {
-		t.Fail()
-		t.Log("Requested short message : ", m.ShortMessage)
-		t.Log("Given short message : ", newm.ShortMessage)
-	}
-
-	if m.Level != newm.Level {
-		t.Fail()
-		t.Log("Requested level : ", m.Level)
-		t.Log("Given Level : ", newm.Level)
-	}
-}
-
-func TestMessageJSONError(t *testing.T) {
-
-	fakeJSON := func(v interface{}) ([]byte, error) {
-		return nil, errors.New("error")
-	}
-
-	m := NewMessage(LevelAlert)
-	m.ReplaceJSONEngine(fakeJSON)
-	jsonByte := m.ToJSON()
-
-	if jsonByte != nil {
-		t.Fail()
-		t.Log("Expected result is nil")
-		t.Log("Given result is : ", jsonByte)
-		t.Log("To string : ", string(jsonByte))
 	}
 }
 

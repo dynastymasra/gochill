@@ -13,10 +13,15 @@ do this to initiate host, service and timestamp value.
 */
 
 import (
-	"encoding/json"
 	"os"
 	"time"
 )
+
+//MessageLog used to set short and full message
+type MessageLog struct {
+	Short string
+	Full  string
+}
 
 //Message struct used to build all required fields
 type Message struct {
@@ -24,32 +29,32 @@ type Message struct {
 	Host         string `json:"host"`
 	Service      string `json:"service"`
 	ShortMessage string `json:"short_message"`
+	FullMessage  string `json:"full_message,omitempty"`
 	Timestamp    int64  `json:"timestamp"`
 	Level        int    `json:"level"`
-	jsonEngine   JSONMarshalEngine
 	osEngine     OSHostEngine
 }
 
-//ToJSON used to convert Message struct from byte to string after marshalled by
-//json encoding
-func (m *Message) ToJSON() []byte {
-	jsonByte, err := m.jsonEngine(m)
-	if err != nil {
-		return nil
-	}
+//ToMap used to convert all exported fields into map string interface
+func (m *Message) ToMap() map[string]interface{} {
+	var maps map[string]interface{}
+	maps = make(map[string]interface{})
 
-	return jsonByte
-}
+	maps["version"] = m.Version
+	maps["host"] = m.Host
+	maps["service"] = m.Service
+	maps["short_message"] = m.ShortMessage
+	maps["timestamp"] = m.Timestamp
+	maps["level"] = m.Level
+	maps["full_message"] = m.FullMessage
 
-//ReplaceJSONEngine used to change json engine
-func (m *Message) ReplaceJSONEngine(je JSONMarshalEngine) {
-	m.jsonEngine = je
+	return maps
 }
 
 //ReplaceOSEngine used to change native golang os hostname implementation
 func (m *Message) ReplaceOSEngine(oe OSHostEngine) {
 	m.osEngine = oe
-	m.Host = _parseHostName(m.osEngine)
+	m.Host = parseHostname(m.osEngine)
 }
 
 //NewMessage used to create new instance of `message` struct
@@ -59,16 +64,29 @@ func NewMessage(level int) *Message {
 	m.Service = os.Getenv(EnvServiceKeyName)
 	m.Timestamp = time.Now().UnixNano() / int64(time.Millisecond)
 	m.Level = level
-	m.jsonEngine = json.Marshal
 	m.osEngine = os.Hostname
-	m.Host = _parseHostName(m.osEngine)
+	m.Host = parseHostname(m.osEngine)
 	return &m
+}
+
+//Msg used to give message contains with short and (optional) full message
+func Msg(short string, full ...string) MessageLog {
+
+	message := MessageLog{}
+	message.Short = short
+
+	//only replace the value if full variable filled
+	if len(full) > 0 {
+		message.Full = full[0]
+	}
+
+	return message
 }
 
 //parseHostName used to parse os hostname, but to simplify our library
 //i just create this function, so we doesn't need to care about multiple
 //return value for caller, is something goes wrong just return an empty string
-func _parseHostName(os OSHostEngine) string {
+func parseHostname(os OSHostEngine) string {
 	host, err := os()
 	if err != nil {
 		return ""
