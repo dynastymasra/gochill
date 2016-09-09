@@ -12,8 +12,16 @@ var (
 	CustomOutput io.Writer
 )
 
+//NilWriter used as custom output writer when CustomOutput nil
+type NilWriter struct{}
+
+func (nw NilWriter) Write(p []byte) (int, error) { return 0, nil }
+
 func init() {
 	Logger = log.New(os.Stdout, "", 0)
+	if CustomOutput == nil {
+		CustomOutput = NilWriter{}
+	}
 }
 
 //NewCustomOutput used to change how Logger send log message

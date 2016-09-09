@@ -72,7 +72,7 @@ func TestAlertWithOptional(t *testing.T) {
 //TestAlertWithoutCustomWriter used to make sure that
 //logging still working even without custom io writer implemented
 func TestAlertWithoutCustomWriter(t *testing.T) {
-	Alert(Msg("ini log"))
+	Alert(Msg("without custom writer"))
 	t.Log("logged")
 }
 
