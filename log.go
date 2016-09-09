@@ -1,44 +1,83 @@
 package gochill
 
+import (
+	"io"
+	"log"
+	"os"
+)
+
+//Logger used to create new log instance
+var (
+	Logger       *log.Logger
+	CustomOutput io.Writer
+)
+
+func init() {
+	Logger = log.New(os.Stdout, "", 0)
+}
+
+//NewCustomOutput used to change how Logger send log message
+func NewCustomOutput(output io.Writer) {
+	Logger.SetOutput(output)
+}
+
 //Alert used to create log message with alert level
-func Alert(msg string) []byte {
-	return buildMessage(LevelAlert, msg)
+func Alert(msg MessageLog, options ...Option) {
+	message := buildMessage(LevelAlert, msg, options)
+	NewCustomOutput(io.MultiWriter(os.Stderr, CustomOutput))
+	Logger.Println(string(message))
 }
 
 //Info used to create log message with info level
-func Info(msg string) []byte {
-	return buildMessage(LevelInfo, msg)
+func Info(msg MessageLog, options ...Option) {
+	message := buildMessage(LevelInfo, msg, options)
+	NewCustomOutput(io.MultiWriter(os.Stdout, CustomOutput))
+	Logger.Println(string(message))
 }
 
 //Critical used to create log message with critical level
-func Critical(msg string) []byte {
-	return buildMessage(LevelCritical, msg)
+func Critical(msg MessageLog, options ...Option) {
+	message := buildMessage(LevelCritical, msg, options)
+	NewCustomOutput(io.MultiWriter(os.Stderr, CustomOutput))
+	Logger.Println(string(message))
 }
 
 //Error used to create log message with error level
-func Error(msg string) []byte {
-	return buildMessage(LevelError, msg)
+func Error(msg MessageLog, options ...Option) {
+	message := buildMessage(LevelError, msg, options)
+	NewCustomOutput(io.MultiWriter(os.Stderr, CustomOutput))
+	Logger.Println(string(message))
 }
 
 //Warn used to create log message with warning level
-func Warn(msg string) []byte {
-	return buildMessage(LevelWarning, msg)
+func Warn(msg MessageLog, options ...Option) {
+	message := buildMessage(LevelWarning, msg, options)
+	NewCustomOutput(io.MultiWriter(os.Stdout, CustomOutput))
+	Logger.Println(string(message))
 }
 
 //Notice used to create log message with warning level
-func Notice(msg string) []byte {
-	return buildMessage(LevelNotice, msg)
+func Notice(msg MessageLog, options ...Option) {
+	message := buildMessage(LevelNotice, msg, options)
+	NewCustomOutput(io.MultiWriter(os.Stdout, CustomOutput))
+	Logger.Println(string(message))
 }
 
 //Debug used to create log message with warning level
-func Debug(msg string) []byte {
-	return buildMessage(LevelDebug, msg)
+func Debug(msg MessageLog, options ...Option) {
+	message := buildMessage(LevelDebug, msg, options)
+	NewCustomOutput(io.MultiWriter(os.Stdout, CustomOutput))
+	Logger.Println(string(message))
 }
 
 //buildMessage is a private function used to build message structure
-func buildMessage(level int, msg string) []byte {
+func buildMessage(level int, msg MessageLog, options []Option) []byte {
 	m := NewMessage(level)
-	m.ShortMessage = msg
+	m.ShortMessage = msg.Short
+	m.FullMessage = msg.Full
 
-	return m.ToJSON()
+	mergedOptions := MergeOptionsToMap(options)
+	maps := CombineMaps(m.ToMap(), mergedOptions)
+
+	return MapToJSON(maps)
 }
