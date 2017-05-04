@@ -30,7 +30,7 @@ If environment variable not exists, then `service` will be an empty string.
 
 Log output format have 2 type `JSON` and `TEXT`, if use `TEXT` it will use library [Logrus](https://github.com/sirupsen/logrus) for 
 output. this can be set to environment variable with registered key `JSON_FORMAT`, this boolean value.
-if set false it will use `TEXT` if true output will set to `JSON` format. default value always set to false
+if set false it will use `TEXT` if true output will set to `JSON` format. default value always set to true
 
 # Hostname
 

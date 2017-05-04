@@ -86,7 +86,7 @@ func NewMessage(level int) *Message {
 func getOutput(status string) bool {
 	format, err := strconv.ParseBool(status)
 	if err != nil {
-		return false
+		return true
 	}
 
 	return format
