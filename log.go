@@ -39,7 +39,7 @@ func Alert(msg MessageLog, options ...Option) {
 	if getOutput(os.Getenv(EnvOutputJSONFormat)) {
 		Logger.Println(string(message))
 	} else {
-		logrus.Panic(string(message))
+		logrus.Warning(string(message))
 	}
 }
 
