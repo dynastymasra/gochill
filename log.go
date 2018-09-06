@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 )
 
 //Logger used to create new log instance
